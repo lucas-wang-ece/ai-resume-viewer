@@ -2,6 +2,8 @@
 
 An AI-powered resume review web app built with Python and Streamlit.
 
+This project helps students analyze their resumes for internship applications by extracting text from PDF resumes, checking ATS keyword alignment, evaluating bullet point quality, and generating an overall resume score.
+
 ## Features
 
 - Upload a resume PDF
@@ -9,8 +11,14 @@ An AI-powered resume review web app built with Python and Streamlit.
 - Select a target internship role
 - Analyze ATS keyword alignment
 - Show matched and missing keywords
-- Generate a keyword match score
-- Provide basic resume improvement recommendations
+- Generate an ATS keyword match score
+- Check bullet point quality
+- Detect action verbs in bullet points
+- Detect technical keywords in bullet points
+- Detect quantified impact in bullet points
+- Generate a bullet point quality score
+- Generate an overall resume score
+- Provide basic improvement recommendations
 
 ## Target Roles
 
@@ -28,14 +36,9 @@ The app currently supports keyword analysis for:
 - pypdf
 - GitHub
 
-## Current Status
+## How to Run Locally
 
-This project currently supports PDF upload, text extraction, target role selection, and ATS keyword analysis.
+1. Clone this repository:
 
-Future improvements will include:
-
-- AI-generated resume feedback
-- Bullet point quality checker
-- Job description matching
-- Prompt chaining workflow
-- Resume scoring dashboard
+```bash
+git clone https://github.com/lucas-wang-ece/ai-resume-viewer.git
