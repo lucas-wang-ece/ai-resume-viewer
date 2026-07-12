@@ -19,6 +19,10 @@ This project helps students analyze their resumes for internship applications by
 - Generate a bullet point quality score
 - Generate an overall resume score
 - Provide basic improvement recommendations
+- Paste a job description and compare it against the resume
+- Extract supported technical keywords from job descriptions
+- Generate a job description match score
+- Show matched and missing job description keywords
 
 ## Target Roles
 
@@ -47,6 +51,9 @@ The app currently supports keyword analysis for:
 ### Overall Resume Score
 ![Overall Resume Score](screenshots/overall_resume_score.png)
 
+### Job Description Matcher
+![Job Description Matcher](screenshots/job_description_matcher.png)
+
 ## How to Run Locally
 
 1. Clone this repository:
@@ -73,3 +80,15 @@ pip install -r requirements.txt
 py -m streamlit run app.py
 ```
 
+## Current Status
+
+This project currently supports PDF upload, resume text extraction, target role selection, ATS keyword analysis, job description matching, bullet point quality checking, and overall resume scoring.
+
+## Future Improvements
+
+- Add AI-generated resume feedback
+- Add bullet point rewriting suggestions
+- Add prompt chaining workflow
+- Add downloadable resume report
+- Improve keyword matching with weighted scoring
+- Add a demo video
