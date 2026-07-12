@@ -83,25 +83,83 @@ role_keywords = {
 }
 
 action_verbs = [
-    "develop", "developed", "implement", "implemented", "design", "designed",
-    "build", "built", "create", "created", "optimize", "optimized",
-    "debug", "debugged", "test", "tested", "analyze", "analyzed",
-    "improve", "improved", "automate", "automated", "lead", "led",
-    "manage", "managed", "collaborate", "collaborated", "engineer", "engineered",
-    "integrate", "integrated", "configure", "configured", "deploy", "deployed",
-    "maintain", "maintained", "program", "programmed", "simulate", "simulated",
-    "monitor", "monitored", "update", "updated", "schedule", "scheduled",
-    "teach", "taught", "foster", "fostered", "supervise", "supervised",
-    "resolve", "resolved", "coordinate", "coordinated", "support", "supported"
+    "develop", "developed",
+    "implement", "implemented",
+    "design", "designed",
+    "build", "built",
+    "create", "created",
+    "optimize", "optimized",
+    "debug", "debugged",
+    "test", "tested",
+    "analyze", "analyzed",
+    "improve", "improved",
+    "automate", "automated",
+    "lead", "led",
+    "manage", "managed",
+    "collaborate", "collaborated",
+    "engineer", "engineered",
+    "integrate", "integrated",
+    "configure", "configured",
+    "deploy", "deployed",
+    "maintain", "maintained",
+    "program", "programmed",
+    "simulate", "simulated",
+    "monitor", "monitored",
+    "update", "updated",
+    "schedule", "scheduled",
+    "teach", "taught",
+    "foster", "fostered",
+    "supervise", "supervised",
+    "resolve", "resolved",
+    "coordinate", "coordinated",
+    "support", "supported",
+    "assist", "assisted",
+    "organize", "organized",
+    "prepare", "prepared",
+    "review", "reviewed",
+    "research", "researched",
+    "present", "presented"
 ]
 
 technical_keywords = [
-    "python", "java", "c++", "c/c++", "verilog", "fpga",
-    "git", "linux", "api", "sql", "pcb", "microcontroller",
-    "embedded systems", "machine learning", "neural network",
-    "tensorflow", "pytorch", "numpy", "pandas", "algorithm",
-    "data structures", "debugging", "debugged", "firmware",
-    "systemverilog", "vhdl", "circuit design", "digital design"
+    "python",
+    "java",
+    "c++",
+    "c/c++",
+    "verilog",
+    "systemverilog",
+    "system verilog",
+    "vhdl",
+    "fpga",
+    "git",
+    "github",
+    "linux",
+    "api",
+    "rest api",
+    "sql",
+    "pcb",
+    "microcontroller",
+    "embedded systems",
+    "firmware",
+    "machine learning",
+    "neural network",
+    "tensorflow",
+    "pytorch",
+    "numpy",
+    "pandas",
+    "algorithm",
+    "algorithms",
+    "data structures",
+    "debugging",
+    "debugged",
+    "debug",
+    "circuit design",
+    "digital design",
+    "digital logic",
+    "oscilloscope",
+    "signal processing",
+    "hardware testing",
+    "hardware design"
 ]
 
 
@@ -157,7 +215,13 @@ def extract_bullet_points(resume_text):
 
 
 def has_action_verb(bullet):
-    first_word = bullet.strip().split()[0].lower()
+    words = bullet.strip().split()
+
+    if not words:
+        return False
+
+    first_word = words[0].lower().strip(".,;:()[]")
+
     return first_word in action_verbs
 
 
@@ -166,14 +230,13 @@ def has_quantified_impact(bullet):
 
 
 def has_technical_keyword(bullet):
-    bullet_lower = bullet.lower()
+    bullet_lower = " " + bullet.lower() + " "
 
     for keyword in technical_keywords:
         if keyword in bullet_lower:
             return True
 
     return False
-
 
 def analyze_bullet_points(bullet_points):
     results = []
