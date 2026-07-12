@@ -49,7 +49,7 @@ role_keywords = {
         "LLM": ["llm", "large language model", "large language models"]
     },
     "ECE Hardware Intern": {
-        "C": [" c ", "c/", "/c", "c programming", "programming in c", " c/c++", "c/c++"],
+        "C": [" c ", "c/", "/c", "c programming", "programming in c", "c/c++"],
         "C++": ["c++", "cpp"],
         "Verilog": ["verilog"],
         "SystemVerilog": ["systemverilog", "system verilog"],
