@@ -1,8 +1,6 @@
 # AI Resume Reviewer
 
-An AI-powered resume review web app built with Python and Streamlit.
-
-This project helps students analyze their resumes for internship applications by extracting text from PDF resumes, checking ATS keyword alignment, evaluating bullet point quality, and generating an overall resume score.
+A Streamlit-based AI Resume Reviewer that extracts resume text from PDFs, analyzes ATS keyword alignment, compares resumes with pasted job descriptions, evaluates bullet point quality, and generates an overall resume score.
 
 ## Features
 
