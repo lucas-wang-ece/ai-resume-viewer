@@ -36,9 +36,40 @@ The app currently supports keyword analysis for:
 - pypdf
 - GitHub
 
+## Screenshots
+
+### ATS Keyword Analysis
+![ATS Keyword Analysis](screenshots/ats_keyword_analysis.png)
+
+### Bullet Point Checker
+![Bullet Point Checker](screenshots/bullet_point_checker.png)
+
+### Overall Resume Score
+![Overall Resume Score](screenshots/overall_resume_score.png)
+
 ## How to Run Locally
 
 1. Clone this repository:
 
 ```bash
 git clone https://github.com/lucas-wang-ece/ai-resume-viewer.git
+```
+
+2. Navigate into the project folder:
+
+```bash
+cd ai-resume-viewer
+```
+
+3. Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the Streamlit app:
+
+```bash
+streamlit run app.py
+```
+
