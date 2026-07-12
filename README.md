@@ -9,7 +9,17 @@ An AI-powered resume review web app built with Python and Streamlit.
 - Select a target internship role
 - Analyze ATS keyword alignment
 - Show matched and missing keywords
-- Generate a basic keyword match score
+- Generate a keyword match score
+- Provide basic resume improvement recommendations
+
+## Target Roles
+
+The app currently supports keyword analysis for:
+
+- Software Engineering Intern
+- AI/ML Intern
+- ECE Hardware Intern
+- Embedded/Firmware Intern
 
 ## Tech Stack
 
@@ -20,4 +30,12 @@ An AI-powered resume review web app built with Python and Streamlit.
 
 ## Current Status
 
-This project currently supports PDF upload, text extraction, and ATS keyword analysis. Future improvements will include AI-generated resume feedback, bullet point analysis, and job description matching.
+This project currently supports PDF upload, text extraction, target role selection, and ATS keyword analysis.
+
+Future improvements will include:
+
+- AI-generated resume feedback
+- Bullet point quality checker
+- Job description matching
+- Prompt chaining workflow
+- Resume scoring dashboard
