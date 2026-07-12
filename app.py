@@ -328,28 +328,6 @@ if uploaded_file is not None:
 
         st.metric("Bullet Point Quality Score", f"{bullet_score}%")
 
-        st.subheader("Overall Resume Score")
-
-        overall_score = round((score * 0.5) + (bullet_score * 0.5))
-
-        st.metric("Overall Resume Score", f"{overall_score}%")
-
-        if overall_score >= 80:
-            st.success(
-                "Your resume is strong for this target role. It has solid keyword alignment and strong bullet point quality."
-            )
-        elif overall_score >= 60:
-            st.warning(
-                "Your resume is decent, but it could be improved by adding more relevant technical keywords and stronger measurable impact."
-        )
-        elif overall_score >= 40:
-            st.warning(
-                "Your resume needs improvement. Focus on adding missing role-specific keywords and quantifying your bullet point impact."
-        )
-        else:
-            st.error(
-                "Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results."
-        )
 
         for index, result in enumerate(bullet_results, start=1):
             st.write(f"### Bullet {index}")
@@ -386,3 +364,26 @@ if uploaded_file is not None:
             st.warning("Your bullet points are decent, but some should include stronger action verbs, technical details, or measurable results.")
         else:
             st.error("Your bullet points need improvement. Try to start each bullet with an action verb and include measurable technical impact.")
+
+        st.subheader("Overall Resume Score")
+
+        overall_score = round((score * 0.5) + (bullet_score * 0.5))
+
+        st.metric("Overall Resume Score", f"{overall_score}%")
+
+        if overall_score >= 80:
+            st.success(
+                "Your resume is strong for this target role. It has solid keyword alignment and strong bullet point quality."
+            )
+        elif overall_score >= 60:
+            st.warning(
+                "Your resume is decent, but it could be improved by adding more relevant technical keywords and stronger measurable impact."
+        )
+        elif overall_score >= 40:
+            st.warning(
+                "Your resume needs improvement. Focus on adding missing role-specific keywords and quantifying your bullet point impact."
+        )
+        else:
+            st.error(
+                "Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results."
+        )
