@@ -162,6 +162,36 @@ technical_keywords = [
     "hardware design"
 ]
 
+jd_keywords = {
+    "Python": ["python"],
+    "Java": ["java"],
+    "C++": ["c++", "cpp"],
+    "C": [" c ", "c/c++", "c programming"],
+    "Git": ["git", "github"],
+    "Linux": ["linux", "unix"],
+    "SQL": ["sql", "mysql", "postgresql", "database"],
+    "REST API": ["rest api", "api", "apis"],
+    "Data Structures": ["data structures", "linked list", "stack", "queue", "tree", "hash table"],
+    "Algorithms": ["algorithm", "algorithms"],
+    "Object-Oriented Programming": ["object-oriented programming", "object oriented programming", "oop"],
+    "Debugging": ["debug", "debugged", "debugging", "debugger"],
+    "Software Development": ["software development", "developed", "implemented", "built"],
+    "Machine Learning": ["machine learning", "ml"],
+    "Deep Learning": ["deep learning"],
+    "TensorFlow": ["tensorflow"],
+    "PyTorch": ["pytorch"],
+    "Pandas": ["pandas"],
+    "NumPy": ["numpy"],
+    "Verilog": ["verilog"],
+    "SystemVerilog": ["systemverilog", "system verilog"],
+    "FPGA": ["fpga"],
+    "Embedded Systems": ["embedded systems", "embedded"],
+    "Firmware": ["firmware"],
+    "Microcontroller": ["microcontroller", "microcontrollers", "mcu"],
+    "PCB": ["pcb", "printed circuit board"],
+    "Circuit Design": ["circuit design", "circuits"],
+    "Digital Design": ["digital design", "digital logic"]
+}
 
 def extract_text_from_pdf(uploaded_file):
     reader = PdfReader(uploaded_file)
@@ -212,6 +242,51 @@ def extract_bullet_points(resume_text):
                 bullet_points.append(clean_line)
 
     return bullet_points
+
+def extract_keywords_from_job_description(job_description, keyword_dict):
+    jd_text_lower = " " + job_description.lower() + " "
+    jd_found_keywords = []
+
+    for main_keyword, variations in keyword_dict.items():
+        for variation in variations:
+            if variation.lower() in jd_text_lower:
+                jd_found_keywords.append(main_keyword)
+                break
+
+    return jd_found_keywords
+
+
+def analyze_job_description_match(resume_text, job_description, keyword_dict):
+    jd_found_keywords = extract_keywords_from_job_description(
+        job_description,
+        keyword_dict
+    )
+
+    resume_text_lower = " " + resume_text.lower() + " "
+
+    matched_jd_keywords = []
+    missing_jd_keywords = []
+
+    for keyword in jd_found_keywords:
+        variations = keyword_dict[keyword]
+        found_in_resume = False
+
+        for variation in variations:
+            if variation.lower() in resume_text_lower:
+                found_in_resume = True
+                break
+
+        if found_in_resume:
+            matched_jd_keywords.append(keyword)
+        else:
+            missing_jd_keywords.append(keyword)
+
+    if len(jd_found_keywords) == 0:
+        jd_match_score = 0
+    else:
+        jd_match_score = round((len(matched_jd_keywords) / len(jd_found_keywords)) * 100)
+
+    return jd_found_keywords, matched_jd_keywords, missing_jd_keywords, jd_match_score
 
 
 def has_action_verb(bullet):
@@ -275,6 +350,58 @@ if uploaded_file is not None:
     st.subheader("Extracted Resume Text")
     st.text_area("Resume Content", resume_text, height=300)
 
+    st.subheader("Job Description Matching")
+
+    job_description = st.text_area(
+        "Paste a job description here to compare it with your resume",
+        height=200
+    )
+
+    analyze_jd_button = st.button("Analyze Job Description Match")
+
+    if analyze_jd_button:
+        if not job_description.strip():
+            st.warning("Please paste a job description before running the analysis.")
+        else:
+            jd_found_keywords, matched_jd_keywords, missing_jd_keywords, jd_match_score = analyze_job_description_match(
+                resume_text,
+                job_description,
+                jd_keywords
+            )
+
+            st.metric("Job Description Match Score", f"{jd_match_score}%")
+
+            st.write("### Keywords Found in Job Description")
+            if jd_found_keywords:
+                st.write(", ".join(jd_found_keywords))
+            else:
+                st.warning("No supported technical keywords were detected in the job description.")
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.write("### Matched JD Keywords")
+                if matched_jd_keywords:
+                    for keyword in matched_jd_keywords:
+                        st.success(keyword)
+                else:
+                    st.warning("No JD keywords matched your resume.")
+
+            with col2:
+                st.write("### Missing JD Keywords")
+                if missing_jd_keywords:
+                    for keyword in missing_jd_keywords:
+                        st.error(keyword)
+                else:
+                    st.success("No missing JD keywords!")
+
+            if jd_match_score >= 80:
+                st.success("Your resume has strong alignment with this job description.")
+            elif jd_match_score >= 50:
+                st.warning("Your resume has moderate alignment with this job description. Consider adding some missing JD keywords if they accurately reflect your experience.")
+            else:
+                st.error("Your resume has low alignment with this job description. Consider tailoring your resume more closely to the role.")
+
     st.subheader("ATS Keyword Analysis")
 
     selected_keywords = role_keywords[target_role]
@@ -328,7 +455,6 @@ if uploaded_file is not None:
 
         st.metric("Bullet Point Quality Score", f"{bullet_score}%")
 
-
         for index, result in enumerate(bullet_results, start=1):
             st.write(f"### Bullet {index}")
             st.write(result["bullet"])
@@ -378,12 +504,12 @@ if uploaded_file is not None:
         elif overall_score >= 60:
             st.warning(
                 "Your resume is decent, but it could be improved by adding more relevant technical keywords and stronger measurable impact."
-        )
+            )
         elif overall_score >= 40:
             st.warning(
                 "Your resume needs improvement. Focus on adding missing role-specific keywords and quantifying your bullet point impact."
-        )
+            )
         else:
             st.error(
                 "Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results."
-        )
+            )
