@@ -16,35 +16,73 @@ target_role = st.selectbox(
     ]
 )
 
-# Keyword lists for different roles
+# Keyword dictionary with synonyms and variations
 role_keywords = {
-    "Software Engineering Intern": [
-        "Python", "Java", "C++", "C", "Git", "Data Structures",
-        "Algorithms", "Object-Oriented Programming", "Linux",
-        "SQL", "REST API", "Debugging", "Software Development"
-    ],
-    "AI/ML Intern": [
-        "Python", "Machine Learning", "Deep Learning", "TensorFlow",
-        "PyTorch", "Pandas", "NumPy", "Scikit-learn", "Data Analysis",
-        "Model Training", "Neural Networks", "Generative AI", "LLM"
-    ],
-    "ECE Hardware Intern": [
-        "C", "C++", "Verilog", "SystemVerilog", "FPGA", "Digital Design",
-        "Circuit Design", "Oscilloscope", "PCB", "VHDL", "Signal Processing",
-        "Embedded Systems", "Hardware Testing"
-    ],
-    "Embedded/Firmware Intern": [
-        "C", "C++", "Embedded Systems", "Microcontroller", "RTOS",
-        "Firmware", "SPI", "I2C", "UART", "ARM", "STM32",
-        "Debugging", "Linux", "Hardware"
-    ]
+    "Software Engineering Intern": {
+        "Python": ["python"],
+        "Java": ["java"],
+        "C++": ["c++", "cpp"],
+        "C": [" c ", "c programming", "programming in c"],
+        "Git": ["git", "github"],
+        "Data Structures": ["data structures", "linked list", "tree", "stack", "queue", "hash table"],
+        "Algorithms": ["algorithms", "algorithm"],
+        "Object-Oriented Programming": ["object-oriented programming", "object oriented programming", "oop"],
+        "Linux": ["linux", "unix"],
+        "SQL": ["sql", "mysql", "postgresql", "database"],
+        "REST API": ["rest api", "api", "apis"],
+        "Debugging": ["debugging", "debugged", "debug", "debugger"],
+        "Software Development": ["software development", "developed", "implemented", "built"]
+    },
+    "AI/ML Intern": {
+        "Python": ["python"],
+        "Machine Learning": ["machine learning", "ml"],
+        "Deep Learning": ["deep learning"],
+        "TensorFlow": ["tensorflow"],
+        "PyTorch": ["pytorch"],
+        "Pandas": ["pandas"],
+        "NumPy": ["numpy"],
+        "Scikit-learn": ["scikit-learn", "sklearn"],
+        "Data Analysis": ["data analysis", "analyzed data", "data analytics"],
+        "Model Training": ["model training", "trained model", "training models"],
+        "Neural Networks": ["neural network", "neural networks"],
+        "Generative AI": ["generative ai", "genai"],
+        "LLM": ["llm", "large language model", "large language models"]
+    },
+    "ECE Hardware Intern": {
+        "C": [" c ", "c/", "/c", "c programming", "programming in c", " c/c++", "c/c++"],
+        "C++": ["c++", "cpp"],
+        "Verilog": ["verilog"],
+        "SystemVerilog": ["systemverilog", "system verilog"],
+        "FPGA": ["fpga"],
+        "Digital Design": ["digital design", "digital logic"],
+        "Circuit Design": ["circuit design", "circuits"],
+        "Oscilloscope": ["oscilloscope"],
+        "PCB": ["pcb", "printed circuit board"],
+        "VHDL": ["vhdl"],
+        "Signal Processing": ["signal processing"],
+        "Embedded Systems": ["embedded systems", "embedded"],
+        "Hardware Testing": ["hardware testing", "tested hardware", "hardware design"]
+    },
+    "Embedded/Firmware Intern": {
+        "C": [" c ", "c programming", "programming in c"],
+        "C++": ["c++", "cpp"],
+        "Embedded Systems": ["embedded systems", "embedded"],
+        "Microcontroller": ["microcontroller", "microcontrollers", "mcu"],
+        "RTOS": ["rtos", "real-time operating system"],
+        "Firmware": ["firmware"],
+        "SPI": ["spi"],
+        "I2C": ["i2c"],
+        "UART": ["uart"],
+        "ARM": ["arm"],
+        "STM32": ["stm32"],
+        "Debugging": ["debugging", "debugged", "debug", "debugger"],
+        "Linux": ["linux"],
+        "Hardware": ["hardware", "hardware design", "hardware testing"]
+    }
 }
 
-uploaded_file = st.file_uploader("Upload your resume", type=["pdf"])
 
-if uploaded_file is not None:
-    st.success("Resume uploaded successfully!")
-
+def extract_text_from_pdf(uploaded_file):
     reader = PdfReader(uploaded_file)
     resume_text = ""
 
@@ -53,6 +91,40 @@ if uploaded_file is not None:
         if text:
             resume_text += text + "\n"
 
+    return resume_text
+
+
+def analyze_keywords(resume_text, keyword_dict):
+    resume_text_lower = " " + resume_text.lower() + " "
+
+    matched_keywords = []
+    missing_keywords = []
+
+    for main_keyword, variations in keyword_dict.items():
+        found = False
+
+        for variation in variations:
+            if variation.lower() in resume_text_lower:
+                found = True
+                break
+
+        if found:
+            matched_keywords.append(main_keyword)
+        else:
+            missing_keywords.append(main_keyword)
+
+    score = round((len(matched_keywords) / len(keyword_dict)) * 100)
+
+    return matched_keywords, missing_keywords, score
+
+
+uploaded_file = st.file_uploader("Upload your resume", type=["pdf"])
+
+if uploaded_file is not None:
+    st.success("Resume uploaded successfully!")
+
+    resume_text = extract_text_from_pdf(uploaded_file)
+
     st.subheader("Extracted Resume Text")
     st.text_area("Resume Content", resume_text, height=300)
 
@@ -60,18 +132,10 @@ if uploaded_file is not None:
 
     selected_keywords = role_keywords[target_role]
 
-    matched_keywords = []
-    missing_keywords = []
-
-    resume_text_lower = resume_text.lower()
-
-    for keyword in selected_keywords:
-        if keyword.lower() in resume_text_lower:
-            matched_keywords.append(keyword)
-        else:
-            missing_keywords.append(keyword)
-
-    score = round((len(matched_keywords) / len(selected_keywords)) * 100)
+    matched_keywords, missing_keywords, score = analyze_keywords(
+        resume_text,
+        selected_keywords
+    )
 
     st.metric("ATS Keyword Match Score", f"{score}%")
 
