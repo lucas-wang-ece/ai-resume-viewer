@@ -1,5 +1,6 @@
 import streamlit as st
 from pypdf import PdfReader
+import re
 
 st.title("AI Resume Reviewer")
 
@@ -22,7 +23,7 @@ role_keywords = {
         "Python": ["python"],
         "Java": ["java"],
         "C++": ["c++", "cpp"],
-        "C": [" c ", "c programming", "programming in c"],
+        "C": [" c ", "c/", "/c", "c programming", "programming in c", "c/c++"],
         "Git": ["git", "github"],
         "Data Structures": ["data structures", "linked list", "tree", "stack", "queue", "hash table"],
         "Algorithms": ["algorithms", "algorithm"],
@@ -64,7 +65,7 @@ role_keywords = {
         "Hardware Testing": ["hardware testing", "tested hardware", "hardware design"]
     },
     "Embedded/Firmware Intern": {
-        "C": [" c ", "c programming", "programming in c"],
+        "C": [" c ", "c/", "/c", "c programming", "programming in c", "c/c++"],
         "C++": ["c++", "cpp"],
         "Embedded Systems": ["embedded systems", "embedded"],
         "Microcontroller": ["microcontroller", "microcontrollers", "mcu"],
@@ -80,6 +81,28 @@ role_keywords = {
         "Hardware": ["hardware", "hardware design", "hardware testing"]
     }
 }
+
+action_verbs = [
+    "develop", "developed", "implement", "implemented", "design", "designed",
+    "build", "built", "create", "created", "optimize", "optimized",
+    "debug", "debugged", "test", "tested", "analyze", "analyzed",
+    "improve", "improved", "automate", "automated", "lead", "led",
+    "manage", "managed", "collaborate", "collaborated", "engineer", "engineered",
+    "integrate", "integrated", "configure", "configured", "deploy", "deployed",
+    "maintain", "maintained", "program", "programmed", "simulate", "simulated",
+    "monitor", "monitored", "update", "updated", "schedule", "scheduled",
+    "teach", "taught", "foster", "fostered", "supervise", "supervised",
+    "resolve", "resolved", "coordinate", "coordinated", "support", "supported"
+]
+
+technical_keywords = [
+    "python", "java", "c++", "c/c++", "verilog", "fpga",
+    "git", "linux", "api", "sql", "pcb", "microcontroller",
+    "embedded systems", "machine learning", "neural network",
+    "tensorflow", "pytorch", "numpy", "pandas", "algorithm",
+    "data structures", "debugging", "debugged", "firmware",
+    "systemverilog", "vhdl", "circuit design", "digital design"
+]
 
 
 def extract_text_from_pdf(uploaded_file):
@@ -116,6 +139,67 @@ def analyze_keywords(resume_text, keyword_dict):
     score = round((len(matched_keywords) / len(keyword_dict)) * 100)
 
     return matched_keywords, missing_keywords, score
+
+
+def extract_bullet_points(resume_text):
+    lines = resume_text.split("\n")
+    bullet_points = []
+
+    for line in lines:
+        clean_line = line.strip()
+
+        if clean_line.startswith("•") or clean_line.startswith("-") or clean_line.startswith("*"):
+            clean_line = clean_line.lstrip("•-* ").strip()
+            if len(clean_line) > 10:
+                bullet_points.append(clean_line)
+
+    return bullet_points
+
+
+def has_action_verb(bullet):
+    first_word = bullet.strip().split()[0].lower()
+    return first_word in action_verbs
+
+
+def has_quantified_impact(bullet):
+    return bool(re.search(r"\d+|%|\$|hours|users|students|projects|times", bullet.lower()))
+
+
+def has_technical_keyword(bullet):
+    bullet_lower = bullet.lower()
+
+    for keyword in technical_keywords:
+        if keyword in bullet_lower:
+            return True
+
+    return False
+
+
+def analyze_bullet_points(bullet_points):
+    results = []
+
+    for bullet in bullet_points:
+        action = has_action_verb(bullet)
+        quantified = has_quantified_impact(bullet)
+        technical = has_technical_keyword(bullet)
+
+        score = 0
+        if action:
+            score += 1
+        if quantified:
+            score += 1
+        if technical:
+            score += 1
+
+        results.append({
+            "bullet": bullet,
+            "action_verb": action,
+            "quantified_impact": quantified,
+            "technical_keyword": technical,
+            "score": score
+        })
+
+    return results
 
 
 uploaded_file = st.file_uploader("Upload your resume", type=["pdf"])
@@ -165,3 +249,54 @@ if uploaded_file is not None:
         st.warning("Your resume has moderate keyword alignment. Consider adding more relevant technical keywords.")
     else:
         st.error("Your resume has low keyword alignment. You should tailor your resume more closely to this role.")
+
+    st.subheader("Bullet Point Analysis")
+
+    bullet_points = extract_bullet_points(resume_text)
+
+    if not bullet_points:
+        st.warning("No bullet points were detected. Make sure your resume uses bullet symbols such as • or -.")
+    else:
+        bullet_results = analyze_bullet_points(bullet_points)
+
+        total_score = sum(result["score"] for result in bullet_results)
+        max_score = len(bullet_results) * 3
+        bullet_score = round((total_score / max_score) * 100)
+
+        st.metric("Bullet Point Quality Score", f"{bullet_score}%")
+
+        for index, result in enumerate(bullet_results, start=1):
+            st.write(f"### Bullet {index}")
+            st.write(result["bullet"])
+
+            col1, col2, col3, col4 = st.columns(4)
+
+            with col1:
+                if result["action_verb"]:
+                    st.success("Action Verb")
+                else:
+                    st.error("No Action Verb")
+
+            with col2:
+                if result["quantified_impact"]:
+                    st.success("Quantified")
+                else:
+                    st.warning("No Numbers")
+
+            with col3:
+                if result["technical_keyword"]:
+                    st.success("Technical")
+                else:
+                    st.warning("No Tech Keyword")
+
+            with col4:
+                st.metric("Score", f"{result['score']}/3")
+
+        st.subheader("Bullet Point Recommendation")
+
+        if bullet_score >= 80:
+            st.success("Your bullet points are strong. They include action verbs, technical details, and measurable impact.")
+        elif bullet_score >= 50:
+            st.warning("Your bullet points are decent, but some should include stronger action verbs, technical details, or measurable results.")
+        else:
+            st.error("Your bullet points need improvement. Try to start each bullet with an action verb and include measurable technical impact.")
