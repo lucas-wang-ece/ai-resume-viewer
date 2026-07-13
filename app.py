@@ -8,31 +8,138 @@ st.set_page_config(
     layout="wide"
 )
 
-st.markdown(
-    """
-    # 📄 AI Resume Reviewer
+st.markdown("""
+<style>
+.stApp {
+    background: linear-gradient(135deg, #fff7fb 0%, #eef7ff 45%, #fffdf3 100%);
+}
 
-    Analyze your resume for internship applications using ATS keyword matching, job description comparison, bullet point checking, and overall resume scoring.
-    """
-)
+/* Main content spacing */
+.block-container {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    max-width: 1200px;
+}
+
+/* Hero title card */
+.hero-card {
+    background: rgba(255, 255, 255, 0.78);
+    padding: 2rem 2.2rem;
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(120, 120, 160, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    margin-bottom: 2rem;
+}
+            
+/* Small input cards */
+.input-card {
+    background: rgba(255, 255, 255, 0.78);
+    padding: 1.6rem 1.8rem;
+    border-radius: 24px;
+    box-shadow: 0 8px 24px rgba(120, 120, 160, 0.10);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    min-height: 190px;
+    margin-bottom: 1rem;
+}
+
+.card-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: #303044;
+    margin-bottom: 0.7rem;
+}
+
+.hero-title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #303044;
+    margin-bottom: 0.5rem;
+}
+
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: #5f6273;
+    line-height: 1.6;
+}
+
+/* Section headings */
+h2, h3 {
+    color: #303044;
+}
+
+/* Buttons */
+div.stButton > button {
+    background: linear-gradient(135deg, #a8d8ff, #d7c8ff);
+    color: #2d2d2d;
+    border-radius: 16px;
+    border: none;
+    padding: 0.6rem 1.1rem;
+    font-weight: 700;
+    box-shadow: 0 6px 16px rgba(120, 120, 180, 0.18);
+}
+
+div.stButton > button:hover {
+    background: linear-gradient(135deg, #94cdf8, #c9b7ff);
+    color: #1f1f1f;
+}
+
+/* Inputs */
+.stTextArea textarea,
+.stSelectbox div[data-baseweb="select"],
+.stFileUploader {
+    border-radius: 18px !important;
+}
+
+/* Metric cards */
+[data-testid="stMetric"] {
+    background: rgba(255, 255, 255, 0.82);
+    padding: 1.2rem 1.4rem;
+    border-radius: 22px;
+    box-shadow: 0 8px 24px rgba(120, 120, 160, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+[data-testid="stMetricValue"] {
+    color: #5b4b8a;
+    font-weight: 800;
+}
+
+/* Alerts */
+[data-testid="stAlert"] {
+    border-radius: 18px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<div class="hero-card">
+    <div class="hero-title">📄 AI Resume Reviewer</div>
+    <div class="hero-subtitle">
+        Upload your resume, compare it with internship roles and job descriptions, 
+        check bullet point quality, and generate an overall resume score.
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("1. Upload Resume")
-    uploaded_file = st.file_uploader("Upload your resume", type=["pdf"])
+    with st.container(border=True):
+        st.markdown("### 📤 1. Upload Resume")
+        uploaded_file = st.file_uploader("Upload your resume", type=["pdf"])
 
 with col2:
-    st.subheader("2. Select Target Role")
-    target_role = st.selectbox(
-        "Select your target role",
-        [
-            "Software Engineering Intern",
-            "AI/ML Intern",
-            "ECE Hardware Intern",
-            "Embedded/Firmware Intern"
-        ]
-    )
+    with st.container(border=True):
+        st.markdown("### 🎯 2. Select Target Role")
+        target_role = st.selectbox(
+            "Select your target role",
+            [
+                "Software Engineering Intern",
+                "AI/ML Intern",
+                "ECE Hardware Intern",
+                "Embedded/Firmware Intern"
+            ]
+        )
 
 st.divider()
 
@@ -365,11 +472,11 @@ if uploaded_file is not None:
     resume_text = extract_text_from_pdf(uploaded_file)
 
     st.divider()
-    st.subheader("Extracted Resume Text")
+    st.subheader("📝Extracted Resume Text")
     st.text_area("Resume Content", resume_text, height=300)
 
     st.divider()
-    st.subheader("Job Description Matching")
+    st.subheader("🔍Job Description Matching")
 
     job_description = st.text_area(
         "Paste a job description here to compare it with your resume",
@@ -422,7 +529,7 @@ if uploaded_file is not None:
                 st.error("Your resume has low alignment with this job description. Consider tailoring your resume more closely to the role.")
 
     st.divider()
-    st.subheader("ATS Keyword Analysis")
+    st.subheader("🎯ATS Keyword Analysis")
 
     selected_keywords = role_keywords[target_role]
 
@@ -461,7 +568,7 @@ if uploaded_file is not None:
         st.error("Your resume has low keyword alignment. You should tailor your resume more closely to this role.")
 
     st.divider()
-    st.subheader("Bullet Point Analysis")
+    st.subheader("📌Bullet Point Analysis")
 
     bullet_points = extract_bullet_points(resume_text)
 
@@ -503,7 +610,7 @@ if uploaded_file is not None:
             with col4:
                 st.metric("Score", f"{result['score']}/3")
 
-        st.subheader("Bullet Point Recommendation")
+        st.subheader("💡Bullet Point Recommendation")
 
         if bullet_score >= 80:
             st.success("Your bullet points are strong. They include action verbs, technical details, and measurable impact.")
@@ -513,7 +620,7 @@ if uploaded_file is not None:
             st.error("Your bullet points need improvement. Try to start each bullet with an action verb and include measurable technical impact.")
 
         st.divider()
-        st.subheader("Resume Score Summary")
+        st.subheader("📊Resume Score Summary")
 
         overall_score = round((score * 0.5) + (bullet_score * 0.5))
 
