@@ -431,7 +431,7 @@ if uploaded_file is not None:
         selected_keywords
     )
 
-    st.metric("ATS Keyword Match Score", f"{score}%")
+    #st.metric("ATS Keyword Match Score", f"{score}%")
 
     col1, col2 = st.columns(2)
 
@@ -474,7 +474,7 @@ if uploaded_file is not None:
         max_score = len(bullet_results) * 3
         bullet_score = round((total_score / max_score) * 100)
 
-        st.metric("Bullet Point Quality Score", f"{bullet_score}%")
+        #st.metric("Bullet Point Quality Score", f"{bullet_score}%")
 
         for index, result in enumerate(bullet_results, start=1):
             st.write(f"### Bullet {index}")
@@ -513,11 +513,23 @@ if uploaded_file is not None:
             st.error("Your bullet points need improvement. Try to start each bullet with an action verb and include measurable technical impact.")
 
         st.divider()
-        st.subheader("Overall Resume Score")
+        st.subheader("Resume Score Summary")
 
         overall_score = round((score * 0.5) + (bullet_score * 0.5))
 
-        st.metric("Overall Resume Score", f"{overall_score}%")
+
+        score_col1, score_col2, score_col3 = st.columns(3)
+
+        with score_col1:
+            st.metric("ATS Keyword Score", f"{score}%")
+
+        with score_col2:
+            st.metric("Bullet Point Score", f"{bullet_score}%")
+
+        with score_col3:
+            st.metric("Overall Resume Score", f"{overall_score}%")
+
+        #st.metric("Overall Resume Score", f"{overall_score}%")
 
         if overall_score >= 80:
             st.success(
