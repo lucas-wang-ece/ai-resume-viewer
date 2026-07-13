@@ -2,20 +2,39 @@ import streamlit as st
 from pypdf import PdfReader
 import re
 
-st.title("AI Resume Reviewer")
-
-st.write("Upload your resume PDF and get AI-powered resume feedback.")
-
-# Target role selection
-target_role = st.selectbox(
-    "Select your target role",
-    [
-        "Software Engineering Intern",
-        "AI/ML Intern",
-        "ECE Hardware Intern",
-        "Embedded/Firmware Intern"
-    ]
+st.set_page_config(
+    page_title="AI Resume Reviewer",
+    page_icon="📄",
+    layout="wide"
 )
+
+st.markdown(
+    """
+    # 📄 AI Resume Reviewer
+
+    Analyze your resume for internship applications using ATS keyword matching, job description comparison, bullet point checking, and overall resume scoring.
+    """
+)
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("1. Upload Resume")
+    uploaded_file = st.file_uploader("Upload your resume", type=["pdf"])
+
+with col2:
+    st.subheader("2. Select Target Role")
+    target_role = st.selectbox(
+        "Select your target role",
+        [
+            "Software Engineering Intern",
+            "AI/ML Intern",
+            "ECE Hardware Intern",
+            "Embedded/Firmware Intern"
+        ]
+    )
+
+st.divider()
 
 # Keyword dictionary with synonyms and variations
 role_keywords = {
@@ -340,16 +359,16 @@ def analyze_bullet_points(bullet_points):
     return results
 
 
-uploaded_file = st.file_uploader("Upload your resume", type=["pdf"])
-
 if uploaded_file is not None:
     st.success("Resume uploaded successfully!")
 
     resume_text = extract_text_from_pdf(uploaded_file)
 
+    st.divider()
     st.subheader("Extracted Resume Text")
     st.text_area("Resume Content", resume_text, height=300)
 
+    st.divider()
     st.subheader("Job Description Matching")
 
     job_description = st.text_area(
@@ -402,6 +421,7 @@ if uploaded_file is not None:
             else:
                 st.error("Your resume has low alignment with this job description. Consider tailoring your resume more closely to the role.")
 
+    st.divider()
     st.subheader("ATS Keyword Analysis")
 
     selected_keywords = role_keywords[target_role]
@@ -440,6 +460,7 @@ if uploaded_file is not None:
     else:
         st.error("Your resume has low keyword alignment. You should tailor your resume more closely to this role.")
 
+    st.divider()
     st.subheader("Bullet Point Analysis")
 
     bullet_points = extract_bullet_points(resume_text)
@@ -491,6 +512,7 @@ if uploaded_file is not None:
         else:
             st.error("Your bullet points need improvement. Try to start each bullet with an action verb and include measurable technical impact.")
 
+        st.divider()
         st.subheader("Overall Resume Score")
 
         overall_score = round((score * 0.5) + (bullet_score * 0.5))
