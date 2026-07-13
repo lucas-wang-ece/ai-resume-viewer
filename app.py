@@ -62,6 +62,40 @@ st.markdown("""
     line-height: 1.6;
 }
 
+/* Keyword chips */
+.keyword-chip-success {
+    display: inline-block;
+    background: #e8f7ec;
+    color: #2f7d46;
+    padding: 0.55rem 0.9rem;
+    margin: 0.25rem 0.25rem 0.25rem 0;
+    border-radius: 999px;
+    font-weight: 600;
+    border: 1px solid #ccebd5;
+}
+
+.keyword-chip-error {
+    display: inline-block;
+    background: #fdeaea;
+    color: #b84a4a;
+    padding: 0.55rem 0.9rem;
+    margin: 0.25rem 0.25rem 0.25rem 0;
+    border-radius: 999px;
+    font-weight: 600;
+    border: 1px solid #f4cccc;
+}
+
+.keyword-chip-warning {
+    display: inline-block;
+    background: #fff8dc;
+    color: #9a7a15;
+    padding: 0.55rem 0.9rem;
+    margin: 0.25rem 0.25rem 0.25rem 0;
+    border-radius: 999px;
+    font-weight: 600;
+    border: 1px solid #f1e5a8;
+}
+            
 /* Section headings */
 h2, h3 {
     color: #303044;
@@ -508,16 +542,20 @@ if uploaded_file is not None:
             with col1:
                 st.write("### Matched JD Keywords")
                 if matched_jd_keywords:
-                    for keyword in matched_jd_keywords:
-                        st.success(keyword)
+                    matched_jd_html = " ".join(
+                        [f'<span class="keyword-chip-success">{keyword}</span>' for keyword in matched_jd_keywords]
+                    )
+                    st.markdown(matched_jd_html, unsafe_allow_html=True)
                 else:
                     st.warning("No JD keywords matched your resume.")
 
             with col2:
                 st.write("### Missing JD Keywords")
                 if missing_jd_keywords:
-                    for keyword in missing_jd_keywords:
-                        st.error(keyword)
+                    missing_jd_html = " ".join(
+                        [f'<span class="keyword-chip-error">{keyword}</span>' for keyword in missing_jd_keywords]
+                    )
+                    st.markdown(missing_jd_html, unsafe_allow_html=True)
                 else:
                     st.success("No missing JD keywords!")
 
@@ -545,16 +583,20 @@ if uploaded_file is not None:
     with col1:
         st.write("### Matched Keywords")
         if matched_keywords:
-            for keyword in matched_keywords:
-                st.success(keyword)
+            matched_html = " ".join(
+                [f'<span class="keyword-chip-success">{keyword}</span>' for keyword in matched_keywords]
+            )
+            st.markdown(matched_html, unsafe_allow_html=True)
         else:
             st.warning("No keywords matched.")
 
     with col2:
         st.write("### Missing Keywords")
         if missing_keywords:
-            for keyword in missing_keywords:
-                st.error(keyword)
+            missing_html = " ".join(
+                [f'<span class="keyword-chip-error">{keyword}</span>' for keyword in missing_keywords]
+            )
+            st.markdown(missing_html, unsafe_allow_html=True)
         else:
             st.success("No missing keywords!")
 
