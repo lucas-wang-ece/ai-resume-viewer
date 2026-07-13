@@ -474,6 +474,49 @@ def analyze_job_description_match(resume_text, job_description, keyword_dict):
 
     return jd_found_keywords, matched_jd_keywords, missing_jd_keywords, jd_match_score
 
+def generate_resume_report(
+    target_role,
+    ats_score,
+    matched_keywords,
+    missing_keywords,
+    bullet_score,
+    overall_score
+):
+    report = f"""
+AI Resume Reviewer Report
+
+Target Role:
+{target_role}
+
+ATS Keyword Match Score:
+{ats_score}%
+
+Matched Keywords:
+{", ".join(matched_keywords) if matched_keywords else "None"}
+
+Missing Keywords:
+{", ".join(missing_keywords) if missing_keywords else "None"}
+
+Bullet Point Quality Score:
+{bullet_score}%
+
+Overall Resume Score:
+{overall_score}%
+
+Recommendation:
+"""
+
+    if overall_score >= 80:
+        report += "Your resume is strong for this target role. It has solid keyword alignment and strong bullet point quality."
+    elif overall_score >= 60:
+        report += "Your resume is decent, but it could be improved by adding more relevant technical keywords and stronger measurable impact."
+    elif overall_score >= 40:
+        report += "Your resume needs improvement. Focus on adding missing role-specific keywords and quantifying your bullet point impact."
+    else:
+        report += "Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results."
+
+    return report
+
 
 def has_action_verb(bullet):
     words = bullet.strip().split()
@@ -747,3 +790,19 @@ if uploaded_file is not None:
                 '<div class="recommendation-card">Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results.</div>',
                 unsafe_allow_html=True
             )
+
+        report_text = generate_resume_report(
+            target_role,
+            score,
+            matched_keywords,
+            missing_keywords,
+            bullet_score,
+            overall_score
+        )
+
+        st.download_button(
+            label="📥 Download Resume Report",
+            data=report_text,
+            file_name="resume_review_report.txt",
+            mime="text/plain"
+        )
