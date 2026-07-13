@@ -629,28 +629,31 @@ if uploaded_file is not None:
             st.write(f"### Bullet {index}")
             st.write(result["bullet"])
 
-            col1, col2, col3, col4 = st.columns(4)
+            status_col, score_col = st.columns([2, 1])
 
-            with col1:
-                if result["action_verb"]:
-                    st.success("Action Verb")
-                else:
-                    st.error("No Action Verb")
+            status_chips = ""
 
-            with col2:
-                if result["quantified_impact"]:
-                    st.success("Quantified")
-                else:
-                    st.warning("No Numbers")
+            if result["action_verb"]:
+                status_chips += '<span class="keyword-chip-success">Action Verb</span>'
+            else:
+                status_chips += '<span class="keyword-chip-error">No Action Verb</span>'
 
-            with col3:
-                if result["technical_keyword"]:
-                    st.success("Technical")
-                else:
-                    st.warning("No Tech Keyword")
+            if result["quantified_impact"]:
+                status_chips += '<span class="keyword-chip-success">Quantified</span>'
+            else:
+                status_chips += '<span class="keyword-chip-warning">No Numbers</span>'
 
-            with col4:
+            if result["technical_keyword"]:
+                status_chips += '<span class="keyword-chip-success">Technical</span>'
+            else:
+                status_chips += '<span class="keyword-chip-warning">No Tech Keyword</span>'
+
+            with status_col:
+                st.markdown(status_chips, unsafe_allow_html=True)
+
+            with score_col:
                 st.metric("Score", f"{result['score']}/3")
+
 
         st.subheader("💡Bullet Point Recommendation")
 
