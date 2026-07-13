@@ -96,6 +96,32 @@ st.markdown("""
     border: 1px solid #f1e5a8;
 }
             
+/* Recommendation cards */
+.recommendation-card {
+    background: rgba(255, 245, 245, 0.9);
+    color: #b84a4a;
+    padding: 1.1rem 1.3rem;
+    border-radius: 20px;
+    border: 1px solid #f3caca;
+    box-shadow: 0 8px 24px rgba(180, 100, 100, 0.08);
+    font-weight: 500;
+    line-height: 1.6;
+    margin-top: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.recommendation-card-warning {
+    background: rgba(255, 250, 226, 0.9);
+    color: #9a7a15;
+    border: 1px solid #f1e5a8;
+}
+
+.recommendation-card-success {
+    background: rgba(232, 247, 236, 0.9);
+    color: #2f7d46;
+    border: 1px solid #ccebd5;
+}
+            
 /* Section headings */
 h2, h3 {
     color: #303044;
@@ -600,14 +626,23 @@ if uploaded_file is not None:
         else:
             st.success("No missing keywords!")
 
-    st.subheader("Basic Recommendation")
+    st.subheader("💡 Basic Recommendation")
 
     if score >= 80:
-        st.success("Your resume has strong keyword alignment for this role.")
+        st.markdown(
+            '<div class="recommendation-card recommendation-card-success">Your resume has strong keyword alignment for this role.</div>',
+            unsafe_allow_html=True
+        )
     elif score >= 50:
-        st.warning("Your resume has moderate keyword alignment. Consider adding more relevant technical keywords.")
+        st.markdown(
+            '<div class="recommendation-card recommendation-card-warning">Your resume has moderate keyword alignment. Consider adding more relevant technical keywords.</div>',
+            unsafe_allow_html=True
+        )
     else:
-        st.error("Your resume has low keyword alignment. You should tailor your resume more closely to this role.")
+        st.markdown(
+            '<div class="recommendation-card">Your resume has low keyword alignment. You should tailor your resume more closely to this role.</div>',
+            unsafe_allow_html=True
+        )
 
     st.divider()
     st.subheader("📌Bullet Point Analysis")
@@ -655,14 +690,23 @@ if uploaded_file is not None:
                 st.metric("Score", f"{result['score']}/3")
 
 
-        st.subheader("💡Bullet Point Recommendation")
+        st.subheader("💡 Bullet Point Recommendation")
 
         if bullet_score >= 80:
-            st.success("Your bullet points are strong. They include action verbs, technical details, and measurable impact.")
+            st.markdown(
+                '<div class="recommendation-card recommendation-card-success">Your bullet points are strong. They include action verbs, technical details, and measurable impact.</div>',
+                unsafe_allow_html=True
+            )
         elif bullet_score >= 50:
-            st.warning("Your bullet points are decent, but some should include stronger action verbs, technical details, or measurable results.")
+            st.markdown(
+                '<div class="recommendation-card recommendation-card-warning">Your bullet points are decent, but some should include stronger action verbs, technical details, or measurable results.</div>',
+                unsafe_allow_html=True
+            )
         else:
-            st.error("Your bullet points need improvement. Try to start each bullet with an action verb and include measurable technical impact.")
+            st.markdown(
+                '<div class="recommendation-card">Your bullet points need improvement. Try to start each bullet with an action verb and include measurable technical impact.</div>',
+                unsafe_allow_html=True
+            )
 
         st.divider()
         st.subheader("📊Resume Score Summary")
@@ -684,18 +728,22 @@ if uploaded_file is not None:
         #st.metric("Overall Resume Score", f"{overall_score}%")
 
         if overall_score >= 80:
-            st.success(
-                "Your resume is strong for this target role. It has solid keyword alignment and strong bullet point quality."
+            st.markdown(
+                '<div class="recommendation-card recommendation-card-success">Your resume is strong for this target role. It has solid keyword alignment and strong bullet point quality.</div>',
+                unsafe_allow_html=True
             )
         elif overall_score >= 60:
-            st.warning(
-                "Your resume is decent, but it could be improved by adding more relevant technical keywords and stronger measurable impact."
+            st.markdown(
+                '<div class="recommendation-card recommendation-card-warning">Your resume is decent, but it could be improved by adding more relevant technical keywords and stronger measurable impact.</div>',
+                unsafe_allow_html=True
             )
         elif overall_score >= 40:
-            st.warning(
-                "Your resume needs improvement. Focus on adding missing role-specific keywords and quantifying your bullet point impact."
+            st.markdown(
+                '<div class="recommendation-card recommendation-card-warning">Your resume needs improvement. Focus on adding missing role-specific keywords and quantifying your bullet point impact.</div>',
+                unsafe_allow_html=True
             )
         else:
-            st.error(
-                "Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results."
+            st.markdown(
+                '<div class="recommendation-card">Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results.</div>',
+                unsafe_allow_html=True
             )
