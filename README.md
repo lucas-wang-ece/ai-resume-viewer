@@ -21,6 +21,7 @@ A Streamlit-based AI Resume Reviewer that extracts resume text from PDFs, analyz
 - Extract supported technical keywords from job descriptions
 - Generate a job description match score
 - Show matched and missing job description keywords
+- Generate and download a resume analysis report
 
 ## Target Roles
 
@@ -51,6 +52,7 @@ The app currently supports keyword analysis for:
 
 ### Job Description Matcher
 ![Job Description Matcher](screenshots/job_description_matcher.png)
+
 
 ## How to Run Locally
 
