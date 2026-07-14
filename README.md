@@ -22,6 +22,7 @@ A Streamlit-based AI Resume Reviewer that extracts resume text from PDFs, analyz
 - Generate a job description match score
 - Show matched and missing job description keywords
 - Generate and download a resume analysis report
+- Generate rule-based resume improvement suggestions
 
 ## Target Roles
 

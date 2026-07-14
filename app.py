@@ -517,6 +517,48 @@ Recommendation:
 
     return report
 
+def generate_improvement_suggestions(
+    missing_keywords,
+    bullet_score,
+    overall_score
+):
+    suggestions = []
+
+    if missing_keywords:
+        top_missing = missing_keywords[:5]
+        suggestions.append(
+            "Consider adding role-specific keywords such as "
+            + ", ".join(top_missing)
+            + " if they accurately reflect your experience."
+        )
+
+    if bullet_score < 50:
+        suggestions.append(
+            "Improve bullet points by adding measurable results, such as percentages, numbers, project scale, performance improvements, or user impact."
+        )
+        suggestions.append(
+            "Strengthen low-scoring bullet points by starting with clear action verbs and explaining technical impact."
+        )
+    elif bullet_score < 80:
+        suggestions.append(
+            "Some bullet points are solid, but they could be improved by adding more quantified impact and technical details."
+        )
+
+    if overall_score < 40:
+        suggestions.append(
+            "Your resume has low alignment for this target role. Focus on tailoring your experience and project descriptions to match the selected role."
+        )
+    elif overall_score < 70:
+        suggestions.append(
+            "Your resume has moderate alignment. Improve it by combining stronger keywords with measurable project outcomes."
+        )
+    else:
+        suggestions.append(
+            "Your resume is relatively strong. Continue refining bullet points and keeping keywords aligned with each job description."
+        )
+
+    return suggestions
+
 
 def has_action_verb(bullet):
     words = bullet.strip().split()
@@ -799,6 +841,21 @@ if uploaded_file is not None:
             bullet_score,
             overall_score
         )
+
+
+        st.subheader("💡 Rule-based Improvement Suggestions")
+
+        suggestions = generate_improvement_suggestions(
+            missing_keywords,
+            bullet_score,
+            overall_score
+        )
+
+        for suggestion in suggestions:
+            st.markdown(
+                f'<div class="recommendation-card recommendation-card-warning">{suggestion}</div>',
+                unsafe_allow_html=True
+            )
 
         st.download_button(
             label="📥 Download Resume Report",
