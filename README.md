@@ -55,6 +55,9 @@ The app currently supports keyword analysis for:
 ### Job Description Matcher
 ![Job Description Matcher](screenshots/job_description_matcher.png)
 
+### Download Resume Report
+![Resume Report](screenshots/download_resume_report.png)
+
 
 ## How to Run Locally
 
