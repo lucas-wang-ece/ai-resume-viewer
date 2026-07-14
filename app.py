@@ -480,7 +480,8 @@ def generate_resume_report(
     matched_keywords,
     missing_keywords,
     bullet_score,
-    overall_score
+    overall_score,
+    suggestions
 ):
     report = f"""
 AI Resume Reviewer Report
@@ -514,6 +515,14 @@ Recommendation:
         report += "Your resume needs improvement. Focus on adding missing role-specific keywords and quantifying your bullet point impact."
     else:
         report += "Your resume currently has low alignment for this target role. Consider tailoring your resume with more technical keywords, stronger action verbs, and measurable results."
+
+    report += "\n\nImprovement Suggestions:\n"
+
+    if suggestions:
+        for suggestion in suggestions:
+            report += f"- {suggestion}\n"
+    else:
+        report += "- No additional suggestions.\n"
 
     return report
 
@@ -833,15 +842,6 @@ if uploaded_file is not None:
                 unsafe_allow_html=True
             )
 
-        report_text = generate_resume_report(
-            target_role,
-            score,
-            matched_keywords,
-            missing_keywords,
-            bullet_score,
-            overall_score
-        )
-
 
         st.subheader("💡 Rule-based Improvement Suggestions")
 
@@ -857,6 +857,15 @@ if uploaded_file is not None:
                 unsafe_allow_html=True
             )
 
+        report_text = generate_resume_report(
+            target_role,
+            score,
+            matched_keywords,
+            missing_keywords,
+            bullet_score,
+            overall_score,
+            suggestions
+        )
         st.download_button(
             label="📥 Download Resume Report",
             data=report_text,
