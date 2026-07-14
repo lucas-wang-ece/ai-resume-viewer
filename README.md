@@ -87,13 +87,13 @@ py -m streamlit run app.py
 
 ## Current Status
 
-This project currently supports PDF upload, resume text extraction, target role selection, ATS keyword analysis, job description matching, bullet point quality checking, and overall resume scoring.
+This project currently supports PDF upload, resume text extraction, target role selection, ATS keyword analysis, job description matching, bullet point quality checking, overall resume scoring, rule-based improvement suggestions, and downloadable resume analysis reports.
 
 ## Future Improvements
 
 - Add AI-generated resume feedback
 - Add bullet point rewriting suggestions
 - Add prompt chaining workflow
-- Add downloadable resume report
 - Improve keyword matching with weighted scoring
+- Add formatted PDF report export
 - Add a demo video
